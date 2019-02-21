@@ -1,0 +1,13 @@
+G04 Gerber job file.*
+%TF.FileFunction,JobInfo*%
+%TF.GenerationSoftware,Autodesk,EAGLE,8.6.0*%
+%TF.CreationDate,2018-09-12T16:35:13Z*%
+%TF.Part,Single*%
+%MOMM*%
+%TJ.B_Owner,Alexandre Castonguay <acastonguay@artengine.ca>*%
+%TJ.B_ID,masterPuck01*%
+%TJ.B_LayerNum,2*%
+%TJ.B_Thickness,1.570000*%
+%TJ.B_Size_X,70.967600*%
+%TJ.B_Size_Y,70.967600*%
+M02*
