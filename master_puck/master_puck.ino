@@ -75,27 +75,27 @@
 #define MINIMUM_BPM 400 // Used for debouncing
 #define MAXIMUM_BPM 3000 // Used for debouncing
 
-long intervalMicroSeconds;
+unsigned long long intervalMicroSeconds;
 int bpm;  // BPM in tenths of a BPM!!
 
 boolean initialized = false;
 long minimumTapInterval = 60L * 1000 * 1000 * 10 / MAXIMUM_BPM;
 long maximumTapInterval = 60L * 1000 * 1000 * 10 / MINIMUM_BPM;
 
-volatile long firstTapTime = 0;
-volatile long lastTapTime = 0;
-volatile long timesTapped = 0;
+volatile unsigned long long firstTapTime = 0;
+volatile unsigned long long lastTapTime = 0;
+volatile unsigned long long timesTapped = 0;
 
 volatile int blinkCount = 0;
 
 int lastDimmerValue = 0;
 
 boolean playing = false;
-long lastStartStopTime = 0;
+unsigned long long lastStartStopTime = 0;
 
 
 #ifdef DIMMER_CHANGE_PIN
-long changeValue = 0;
+unsigned long long changeValue = 0;
 #endif
 
 
@@ -255,7 +255,7 @@ void loop() {
 
  // Serial.println("hello world");
 
-  long now = micros();
+  unsigned long long now = micros();
 
 #ifdef TAP_PIN
   /*
@@ -266,7 +266,7 @@ void loop() {
       Serial.println("Ignoring lone taps!");
     timesTapped = 0;
   } else if (timesTapped >= MINIMUM_TAPS) {
-    long avgTapInterval = (lastTapTime - firstTapTime) / (timesTapped - 1);
+    unsigned long long avgTapInterval = (lastTapTime - firstTapTime) / (timesTapped - 1);
     if ((now - lastTapTime) > (avgTapInterval * EXIT_MARGIN / 100)) {
       bpm = 60L * 1000 * 1000 * 10 / avgTapInterval;
       updateBpm(now);
@@ -337,7 +337,7 @@ void loop() {
   
   boolean startStopPressed;
   
-      if(analogRead(START_STOP_INPUT_PIN) >= 0 && analogRead(START_STOP_INPUT_PIN) <= 50) {
+  if(analogRead(START_STOP_INPUT_PIN) >= 0 && analogRead(START_STOP_INPUT_PIN) <= 50) {
     startStopPressed = 1;
   } else {
     startStopPressed = 0;
@@ -383,7 +383,7 @@ void testdrawbitmap(const uint8_t *bitmap, uint8_t w, uint8_t h) {
     Serial.println(icons[f][DELTAY], DEC);
   }
 
-  while (counter < 3) {
+  while (counter < 2) {
     // draw each icon
     for (uint8_t f=0; f< NUMFLAKES; f++) {
       display.drawBitmap(icons[f][XPOS], icons[f][YPOS], bitmap, w, h, WHITE);
@@ -415,7 +415,7 @@ void testdrawbitmap(const uint8_t *bitmap, uint8_t w, uint8_t h) {
 
 ///// LES FONCTIONS /////
 void tapInput() {
-  long now = micros();
+  unsigned long long now = micros();
   if (now - lastTapTime < minimumTapInterval) {
     return; // Debounce
   }
@@ -473,9 +473,9 @@ void sendClockPulse() {
   }
 }
 
-void updateBpm(long now) {
+void updateBpm(unsigned long long now) {
   // Update the timer
-  long interval = calculateIntervalMicroSecs(bpm);
+  unsigned long long interval = calculateIntervalMicroSecs(bpm);
   Timer1.setPeriod(interval);
 
 #ifdef EEPROM_ADDRESS
@@ -512,7 +512,7 @@ void updateBpm(long now) {
 
 }
 
-long calculateIntervalMicroSecs(int bpm) {
+unsigned long long calculateIntervalMicroSecs(int bpm) {
   // Take care about overflows!
   return 60L * 1000 * 1000 * 10 / bpm / CLOCKS_PER_BEAT;
 }
